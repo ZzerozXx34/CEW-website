@@ -32,12 +32,21 @@ p{color:var(--muted)}
 .lede{max-width:640px;font-size:16.5px}
 .eyebrow{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;display:inline-flex;align-items:center;gap:8px}
 .eyebrow::before{content:'';width:16px;height:1px;background:var(--accent)}
-.btn{font-family:inherit;font-size:13.5px;font-weight:700;letter-spacing:.02em;border:1px solid var(--accent);color:#fff;background:var(--accent);padding:14px 26px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s ease,background .15s ease,box-shadow .15s ease;cursor:pointer}
+.btn{font-family:inherit;font-size:13.5px;font-weight:700;letter-spacing:.02em;border:1px solid var(--accent);color:#fff;background:var(--accent);padding:14px 26px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s ease,background .15s ease,box-shadow .15s ease;cursor:pointer;position:relative}
 .btn:hover{background:var(--accent-hover);border-color:var(--accent-hover);transform:translateY(-1px);box-shadow:0 8px 18px rgba(184,91,53,.28)}
 .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-strong)}
 .btn-ghost:hover{background:var(--surface-muted);box-shadow:none}
 .btn-sm{padding:8px 14px;font-size:12px}
 .btn:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn:disabled{opacity:0.6;cursor:not-allowed;transform:none!important}
+
+/* Loading Spinner */
+.spinner{width:16px;height:16px;border:2px solid currentColor;border-bottom-color:transparent;border-radius:50%;display:inline-block;animation:rotation 1s linear infinite}
+@keyframes rotation{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+/* Scroll Animations */
+.animate-on-scroll{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.animate-on-scroll.is-visible{opacity:1;transform:translateY(0)}
 
 header{position:sticky;top:0;z-index:100;background:rgba(250,250,249,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 nav.wrap{display:flex;align-items:center;justify-content:space-between;height:74px}
@@ -127,7 +136,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none}
 #calculated-price{font-family:'Playfair Display',serif;font-size:28px;font-weight:700}
 
 .faq-item{border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface);overflow:hidden}
-.faq-q{width:100%;text-align:left;background:none;border:0;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:'Playfair Display',serif;font-weight:700;font-size:16.5px;color:var(--ink)}
+.faq-q{width:100%;text-align:left;background:none;border:0;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:'Playfair Display',serif;font-weight:700;font-size:16.5px;color:var(--ink);cursor:pointer}
 .faq-q::after{content:'+';font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;color:var(--accent);flex:none;transition:transform .2s ease}
 .faq-item.open .faq-q::after{transform:rotate(45deg)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease}
@@ -145,10 +154,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none}
 .review-rating{color:#E59838;font-weight:700;font-size:13px;margin-bottom:6px;font-family:'JetBrains Mono',monospace}
 .reviews-actions{text-align:center;margin-top:20px}
 
-.modal-overlay{position:fixed;inset:0;background:rgba(20,16,13,.72);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.active{display:flex}
-.modal-box{background:var(--surface);border-radius:var(--radius-lg);max-width:560px;width:100%;padding:38px;max-height:90vh;overflow-y:auto;border:1px solid var(--line-strong);position:relative}
+/* Enhanced Animated Modals */
+.modal-overlay{position:fixed;inset:0;background:rgba(20,16,13,.72);backdrop-filter:blur(4px);z-index:2000;opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:center;padding:20px;transition:opacity .3s ease}
+.modal-overlay.active{opacity:1;pointer-events:auto}
+.modal-box{background:var(--surface);border-radius:var(--radius-lg);max-width:560px;width:100%;padding:38px;max-height:90vh;overflow-y:auto;border:1px solid var(--line-strong);position:relative;transform:scale(0.92) translateY(12px);transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.modal-overlay.active .modal-box{transform:scale(1) translateY(0)}
 .modal-box h3{margin-bottom:8px}
+
+/* Toast Notification Styles */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:3000;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--ink);color:#fff;padding:14px 20px;border-radius:var(--radius-md);font-size:13.5px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(20px);transition:all .3s ease;border-left:4px solid var(--accent)}
+.toast.show{opacity:1;transform:translateY(0)}
 
 footer{padding:48px 0;background:#1C1712;color:#A8A29E;font-size:13.5px}
 footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
@@ -183,7 +199,7 @@ footer a{color:var(--accent-border)}
 <main>
   <section class="hero" style="border-bottom:1px solid var(--line)">
     <div class="wrap hero-grid">
-      <div>
+      <div class="animate-on-scroll">
         <div class="eyebrow">Managed execution agency for fast-scaling brands</div>
         <h1>Stop managing freelancers. Hire an entire execution engine.</h1>
         <p class="lede">C.E.W deploys dedicated, cross-functional pods under direct leadership oversight — combining expert developers, social media management, video editing, customer support, and daily updates into one system.</p>
@@ -192,7 +208,7 @@ footer a{color:var(--accent-border)}
           <a href="#about" class="btn btn-ghost">Learn how C.E.W works</a>
         </div>
       </div>
-      <div class="hero-visual">
+      <div class="hero-visual animate-on-scroll">
         <div class="pillar-stack">
           <div class="pillar-card"><strong>Expert developers &amp; tech</strong><p>Building websites, handling apps, and fixing bugs without you ever needing to write code.</p></div>
           <div class="pillar-card"><strong>Content &amp; social media</strong><p>Uploading videos, editing clips, managing social pages, and engaging with your audience.</p></div>
@@ -204,48 +220,47 @@ footer a{color:var(--accent-border)}
 
   <div class="stats-banner">
     <div class="wrap stats-grid">
-      <div><div class="stat-num">1 Message</div><div class="stat-label">Just send one daily note for tasks</div></div>
-      <div><div class="stat-num">100%</div><div class="stat-label">Zero management overhead for you</div></div>
-      <div><div class="stat-num">Daily</div><div class="stat-label">Structured progress reports sent</div></div>
-      <div><div class="stat-num">3–6</div><div class="stat-label">Dedicated specialists per pod</div></div>
+      <div class="animate-on-scroll"><div class="stat-num">1 Message</div><div class="stat-label">Just send one daily note for tasks</div></div>
+      <div class="animate-on-scroll"><div class="stat-num">100%</div><div class="stat-label">Zero management overhead for you</div></div>
+      <div class="animate-on-scroll"><div class="stat-num">Daily</div><div class="stat-label">Structured progress reports sent</div></div>
+      <div class="animate-on-scroll"><div class="stat-num">3–6</div><div class="stat-label">Dedicated specialists per pod</div></div>
     </div>
   </div>
 
   <section id="about">
     <div class="wrap">
-      <div class="eyebrow">About ComfortEncodeWorkplace</div>
-      <h2>Built to solve the scaling trap</h2>
-      <p class="lede" style="max-width:800px">Traditional virtual assistant companies hand you raw contractors and turn you into a full-time project manager. Agencies charge high fees and leave you hanging. C.E.W provides completely managed pods handled by our separate team of team managers. You don't have to manage anything — just send one simple message if you need something done today, and our dedicated team takes care of the rest.</p>
+      <div class="eyebrow animate-on-scroll">About ComfortEncodeWorkplace</div>
+      <h2 class="animate-on-scroll">Built to solve the scaling trap</h2>
+      <p class="lede animate-on-scroll" style="max-width:800px">Traditional virtual assistant companies hand you raw contractors and turn you into a full-time project manager. Agencies charge high fees and leave you hanging. C.E.W provides completely managed pods handled by our separate team of team managers. You don't have to manage anything — just send one simple message if you need something done today, and our dedicated team takes care of the rest.</p>
       <div class="grid-3">
-        <div class="card"><div class="tag">01 · Zero management</div><h3>Dedicated Team Managers</h3><p style="margin-top:10px;font-size:14px">A separate team of managers oversees everything so you never have to micromanage your workers.</p></div>
-        <div class="card"><div class="tag">02 · Expert talent</div><h3>Top-Tier Specialists</h3><p style="margin-top:10px;font-size:14px">Skilled developers, video editors, and support staff working seamlessly to grow your business.</p></div>
-        <div class="card"><div class="tag">03 · Daily clarity</div><h3>Daily Progress Updates</h3><p style="margin-top:10px;font-size:14px">Receive daily updates every single day on what happened and what work we completed.</p></div>
+        <div class="card animate-on-scroll"><div class="tag">01 · Zero management</div><h3>Dedicated Team Managers</h3><p style="margin-top:10px;font-size:14px">A separate team of managers oversees everything so you never have to micromanage your workers.</p></div>
+        <div class="card animate-on-scroll"><div class="tag">02 · Expert talent</div><h3>Top-Tier Specialists</h3><p style="margin-top:10px;font-size:14px">Skilled developers, video editors, and support staff working seamlessly to grow your business.</p></div>
+        <div class="card animate-on-scroll"><div class="tag">03 · Daily clarity</div><h3>Daily Progress Updates</h3><p style="margin-top:10px;font-size:14px">Receive daily updates every single day on what happened and what work we completed.</p></div>
       </div>
     </div>
   </section>
 
   <section id="workflow" style="background:var(--surface)">
     <div class="wrap">
-      <div class="eyebrow">Our operational methodology</div>
-      <h2>How C.E.W operates your business engine</h2>
-      <p class="lede">A simple process designed to get your team running smoothly without any headaches.</p>
+      <div class="eyebrow animate-on-scroll">Our operational methodology</div>
+      <h2 class="animate-on-scroll">How C.E.W operates your business engine</h2>
+      <p class="lede animate-on-scroll">A simple process designed to get your team running smoothly without any headaches.</p>
       <div class="grid-4">
-        <div class="card"><div class="step-num">01</div><h3>Quick setup call</h3><p style="margin-top:8px;font-size:14px">We look at your tasks and goals to match you with your 3–6 specialist pod.</p></div>
-        <div class="card"><div class="step-num">02</div><h3>Connect &amp; align</h3><p style="margin-top:8px;font-size:14px">We sync up with your tools and set clear instructions on how you want things handled.</p></div>
-        <div class="card"><div class="step-num">03</div><h3>Daily execution</h3><p style="margin-top:8px;font-size:14px">Just send one message with what you need done, and your pod executes it immediately.</p></div>
-        <div class="card"><div class="step-num">04</div><h3>Daily updates</h3><p style="margin-top:8px;font-size:14px">Receive a clear breakdown every day of what got done and what is coming next.</p></div>
+        <div class="card animate-on-scroll"><div class="step-num">01</div><h3>Quick setup call</h3><p style="margin-top:8px;font-size:14px">We look at your tasks and goals to match you with your 3–6 specialist pod.</p></div>
+        <div class="card animate-on-scroll"><div class="step-num">02</div><h3>Connect &amp; align</h3><p style="margin-top:8px;font-size:14px">We sync up with your tools and set clear instructions on how you want things handled.</p></div>
+        <div class="card animate-on-scroll"><div class="step-num">03</div><h3>Daily execution</h3><p style="margin-top:8px;font-size:14px">Just send one message with what you need done, and your pod executes it immediately.</p></div>
+        <div class="card animate-on-scroll"><div class="step-num">04</div><h3>Daily updates</h3><p style="margin-top:8px;font-size:14px">Receive a clear breakdown every day of what got done and what is coming next.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- Expanded Complete Service Catalog Section with Detail Buttons -->
   <section id="catalog" style="background:var(--surface)">
     <div class="wrap">
-      <div class="eyebrow">Complete service catalog</div>
-      <h2>Every service we handle for your business</h2>
-      <p class="lede">Browse our full list of services below. Click the button on any card to read the complete, detailed breakdown.</p>
+      <div class="eyebrow animate-on-scroll">Complete service catalog</div>
+      <h2 class="animate-on-scroll">Every service we handle for your business</h2>
+      <p class="lede animate-on-scroll">Browse our full list of services below. Click the button on any card to read the complete, detailed breakdown.</p>
 
-      <div class="catalog-category">
+      <div class="catalog-category animate-on-scroll">
         <h3>Content, Video &amp; Social Media <span>4 Services</span></h3>
         <div class="catalog-grid">
           <div class="catalog-item">
@@ -279,7 +294,7 @@ footer a{color:var(--accent-border)}
         </div>
       </div>
 
-      <div class="catalog-category">
+      <div class="catalog-category animate-on-scroll">
         <h3>Support, Email &amp; Admin Ops <span>4 Services</span></h3>
         <div class="catalog-grid">
           <div class="catalog-item">
@@ -313,7 +328,7 @@ footer a{color:var(--accent-border)}
         </div>
       </div>
 
-      <div class="catalog-category">
+      <div class="catalog-category animate-on-scroll">
         <h3>Development &amp; Management <span>3 Services</span></h3>
         <div class="catalog-grid">
           <div class="catalog-item">
@@ -345,21 +360,21 @@ footer a{color:var(--accent-border)}
 
   <section id="case-studies" style="background:var(--surface)">
     <div class="wrap">
-      <div class="eyebrow">Real client results</div>
-      <h2>How fast-growing companies scale with C.E.W pods</h2>
+      <div class="eyebrow animate-on-scroll">Real client results</div>
+      <h2 class="animate-on-scroll">How fast-growing companies scale with C.E.W pods</h2>
       <div class="grid-3">
-        <div class="card"><div class="tag">Tech &amp; Dev</div><h3>Website refactor &amp; 24/7 deployment</h3><p style="margin-top:10px;font-size:14px">A software brand needed a full frontend update with 100% uptime and zero stress.</p><div class="case-result">Shipped early with zero bugs through our managed team handoffs.</div></div>
-        <div class="card"><div class="tag">Content &amp; Social</div><h3>Video editing &amp; social media scale</h3><p style="margin-top:10px;font-size:14px">A growing brand needed daily video uploads, editing, and active community engagement.</p><div class="case-result">Saved 20+ hours weekly while doubling viewer engagement.</div></div>
-        <div class="card"><div class="tag">Operations &amp; Support</div><h3>Automated outreach &amp; email handling</h3><p style="margin-top:10px;font-size:14px">An agency was losing hours daily to manual emails and client prospecting work.</p><div class="case-result">Automated lead outreach and safely streamlined inbox management.</div></div>
+        <div class="card animate-on-scroll"><div class="tag">Tech &amp; Dev</div><h3>Website refactor &amp; 24/7 deployment</h3><p style="margin-top:10px;font-size:14px">A software brand needed a full frontend update with 100% uptime and zero stress.</p><div class="case-result">Shipped early with zero bugs through our managed team handoffs.</div></div>
+        <div class="card animate-on-scroll"><div class="tag">Content &amp; Social</div><h3>Video editing &amp; social media scale</h3><p style="margin-top:10px;font-size:14px">A growing brand needed daily video uploads, editing, and active community engagement.</p><div class="case-result">Saved 20+ hours weekly while doubling viewer engagement.</div></div>
+        <div class="card animate-on-scroll"><div class="tag">Operations &amp; Support</div><h3>Automated outreach &amp; email handling</h3><p style="margin-top:10px;font-size:14px">An agency was losing hours daily to manual emails and client prospecting work.</p><div class="case-result">Automated lead outreach and safely streamlined inbox management.</div></div>
       </div>
     </div>
   </section>
 
   <section id="results-vault">
     <div class="wrap">
-      <div class="eyebrow">Proof &amp; live metrics vault</div>
-      <h2>Want to see our actual client results and dashboards?</h2>
-      <div class="results-preview-banner">
+      <div class="eyebrow animate-on-scroll">Proof &amp; live metrics vault</div>
+      <h2 class="animate-on-scroll">Want to see our actual client results and dashboards?</h2>
+      <div class="results-preview-banner animate-on-scroll">
         <h3>Book a personal walkthrough with our team</h3>
         <p>To protect our active clients' proprietary metrics and private workflows, we do not publish raw data publicly. Book a 1-on-1 strategy session to have us walk you through the actual results personally.</p>
         <button class="btn" onclick="openModal()">Book a personal walkthrough</button>
@@ -369,9 +384,9 @@ footer a{color:var(--accent-border)}
 
   <section id="matrix">
     <div class="wrap">
-      <div class="eyebrow">The unfair advantage</div>
-      <h2>Why C.E.W pods outperform traditional hiring</h2>
-      <div class="matrix-wrap">
+      <div class="eyebrow animate-on-scroll">The unfair advantage</div>
+      <h2 class="animate-on-scroll">Why C.E.W pods outperform traditional hiring</h2>
+      <div class="matrix-wrap animate-on-scroll">
         <table>
           <thead><tr><th>Execution factor</th><th>Freelancer marketplaces</th><th>Traditional agencies</th><th>C.E.W</th></tr></thead>
           <tbody>
@@ -388,17 +403,17 @@ footer a{color:var(--accent-border)}
 
   <section id="pricing" style="background:var(--surface)">
     <div class="wrap">
-      <div class="eyebrow">Flat-rate transparent pricing</div>
-      <h2>Select your managed pod configuration</h2>
-      <p class="lede">No hourly surprises, no hidden overhead, no long-term restrictive contracts.</p>
+      <div class="eyebrow animate-on-scroll">Flat-rate transparent pricing</div>
+      <h2 class="animate-on-scroll">Select your managed pod configuration</h2>
+      <p class="lede animate-on-scroll">No hourly surprises, no hidden overhead, no long-term restrictive contracts.</p>
       <div class="pricing-grid">
-        <div class="card pricing-card"><h3>3-Person pod</h3><p>Core developer, content creator, and ops specialist for early scaling.</p><div class="price">$2,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(3,2999)">Select 3-person plan</button></div>
-        <div class="card pricing-card"><h3>4-Person pod</h3><p>Balanced squad for active web, video editing, and support work.</p><div class="price">$3,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(4,3999)">Select 4-person plan</button></div>
-        <div class="card pricing-card popular"><div class="popular-badge">Most popular</div><h3>5-Person pod</h3><p>Full-stack squad running complete daily shifts across all pillars.</p><div class="price">$4,999<span> /mo</span></div><button class="btn" onclick="selectPricingTier(5,4999)">Select 5-person plan</button></div>
-        <div class="card pricing-card"><h3>6-Person pod</h3><p>Enterprise squad for high-volume development and social scaling.</p><div class="price">$5,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(6,5999)">Select 6-person plan</button></div>
+        <div class="card pricing-card animate-on-scroll"><h3>3-Person pod</h3><p>Core developer, content creator, and ops specialist for early scaling.</p><div class="price">$2,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(3,2999)">Select 3-person plan</button></div>
+        <div class="card pricing-card animate-on-scroll"><h3>4-Person pod</h3><p>Balanced squad for active web, video editing, and support work.</p><div class="price">$3,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(4,3999)">Select 4-person plan</button></div>
+        <div class="card pricing-card popular animate-on-scroll"><div class="popular-badge">Most popular</div><h3>5-Person pod</h3><p>Full-stack squad running complete daily shifts across all pillars.</p><div class="price">$4,999<span> /mo</span></div><button class="btn" onclick="selectPricingTier(5,4999)">Select 5-person plan</button></div>
+        <div class="card pricing-card animate-on-scroll"><h3>6-Person pod</h3><p>Enterprise squad for high-volume development and social scaling.</p><div class="price">$5,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(6,5999)">Select 6-person plan</button></div>
       </div>
 
-      <div class="builder" id="pod-builder">
+      <div class="builder animate-on-scroll" id="pod-builder">
         <h3>Configure &amp; deploy your custom pod</h3>
         <p style="margin:8px 0 20px;font-size:14px">Select your capacity and submit your details to launch with our managed team.</p>
         <div class="field">
@@ -410,14 +425,14 @@ footer a{color:var(--accent-border)}
             <option value="6">6 members — Enterprise scale squad ($5,999/mo)</option>
           </select>
         </div>
-        <form onsubmit="dispatchPodRequest(event)">
+        <form id="pod-application-form" onsubmit="handlePodApplicationSubmit(event)">
           <div class="builder-row">
             <div class="field"><label>Your name</label><input type="text" id="cust-name" required placeholder="e.g. David Sterling"></div>
             <div class="field"><label>Work email address</label><input type="email" id="cust-email" required placeholder="david@company.com"></div>
           </div>
           <div class="builder-foot">
             <div><small>Estimated flat rate</small><div id="calculated-price">$4,999 / mo</div></div>
-            <button type="submit" class="btn">Dispatch pod application</button>
+            <button type="submit" class="btn" id="pod-submit-btn"><span class="btn-text">Dispatch pod application</span></button>
           </div>
         </form>
       </div>
@@ -426,24 +441,24 @@ footer a{color:var(--accent-border)}
 
   <section id="faq">
     <div class="wrap">
-      <div class="eyebrow">Answers to your questions</div>
-      <h2>Frequently asked questions</h2>
-      <div class="faq-list">
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How quickly can our C.E.W pod go live?<span></span></button><div class="faq-a"><p>Once you complete your strategy consultation and select a pod size, we set up communication and align on your instructions within 24–48 hours.</p></div></div>
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What does zero-management burden mean?<span></span></button><div class="faq-a"><p>You never manage workers. Our separate team of team managers oversees everyone. You just send one daily message for tasks you want done.</p></div></div>
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How do you handle my emails safely?<span></span></button><div class="faq-a"><p>We reply according to your exact instructions. If an email comes in without prior guidelines, we check with you first to ensure nothing unpleasant or unapproved is done.</p></div></div>
-        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can we change our pod size later?<span></span></button><div class="faq-a"><p>Yes — scale your pod size up or down anytime with 5 days' notice as your workload changes.</p></div></div>
+      <div class="eyebrow animate-on-scroll">Answers to your questions</div>
+      <h2 class="animate-on-scroll">Frequently asked questions</h2>
+      <div class="faq-list animate-on-scroll">
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How quickly can our C.E.W pod go live?</button><div class="faq-a"><p>Once you complete your strategy consultation and select a pod size, we set up communication and align on your instructions within 24–48 hours.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What does zero-management burden mean?</button><div class="faq-a"><p>You never manage workers. Our separate team of team managers oversees everyone. You just send one daily message for tasks you want done.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How do you handle my emails safely?</button><div class="faq-a"><p>We reply according to your exact instructions. If an email comes in without prior guidelines, we check with you first to ensure nothing unpleasant or unapproved is done.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can we change our pod size later?</button><div class="faq-a"><p>Yes — scale your pod size up or down anytime with 5 days' notice as your workload changes.</p></div></div>
       </div>
     </div>
   </section>
 
   <section id="reviews" style="background:var(--surface);border-bottom:none">
     <div class="wrap">
-      <div class="eyebrow">Live client feedback</div>
-      <h2>Client reviews &amp; community ratings</h2>
-      <p class="lede" style="margin-bottom:30px">Submit a review below to add it instantly. The top highest-rated reviews are pinned to the top.</p>
+      <div class="eyebrow animate-on-scroll">Live client feedback</div>
+      <h2 class="animate-on-scroll">Client reviews &amp; community ratings</h2>
+      <p class="lede animate-on-scroll" style="margin-bottom:30px">Submit a review below to add it instantly. The top highest-rated reviews are pinned to the top.</p>
 
-      <div class="review-submission">
+      <div class="review-submission animate-on-scroll">
         <h3 style="margin-bottom:14px">Leave a public review</h3>
         <form onsubmit="submitPublicReview(event)">
           <div class="builder-row">
@@ -471,9 +486,9 @@ footer a{color:var(--accent-border)}
         </form>
       </div>
 
-      <div class="reviews-list" id="reviews-container"></div>
+      <div class="reviews-list animate-on-scroll" id="reviews-container"></div>
       
-      <div class="reviews-actions" id="view-all-container" style="display:none">
+      <div class="reviews-actions animate-on-scroll" id="view-all-container" style="display:none">
         <button class="btn btn-ghost" onclick="openAllReviewsModal()">View all comments (<span id="total-reviews-count">0</span>)</button>
       </div>
     </div>
@@ -490,22 +505,27 @@ footer a{color:var(--accent-border)}
   </div>
 </footer>
 
+<!-- Toast Alert Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Strategy Call Modal -->
 <div class="modal-overlay" id="strategy-modal">
   <div class="modal-box">
     <h3>Schedule a strategy consultation</h3>
     <p style="margin-bottom:20px;font-size:14px">Let us evaluate your goals and workflow to design your custom pod and view actual results personally.</p>
-    <form onsubmit="closeModal();alert('Strategy call requested! Our team will reach out shortly.');return false;">
-      <div class="field"><label>Full name</label><input type="text" required placeholder="Alex Morgan"></div>
-      <div class="field"><label>Work email address</label><input type="email" required placeholder="alex@company.com"></div>
-      <div class="field"><label>Primary business objective</label><textarea rows="3" placeholder="Tell us what bottlenecks you want solved..."></textarea></div>
+    <form id="strategy-modal-form" onsubmit="handleStrategyFormSubmit(event)">
+      <div class="field"><label>Full name</label><input type="text" id="strat-name" required placeholder="Alex Morgan"></div>
+      <div class="field"><label>Work email address</label><input type="email" id="strat-email" required placeholder="alex@company.com"></div>
+      <div class="field"><label>Primary business objective / message</label><textarea id="strat-msg" rows="3" required placeholder="Tell us what bottlenecks you want solved..."></textarea></div>
       <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:22px">
         <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-        <button type="submit" class="btn">Submit request</button>
+        <button type="submit" class="btn" id="strat-submit-btn"><span class="btn-text">Submit request</span></button>
       </div>
     </form>
   </div>
 </div>
 
+<!-- Service Details Modal -->
 <div class="modal-overlay" id="detail-modal">
   <div class="modal-box">
     <h3 id="detail-modal-title">Service Details</h3>
@@ -516,6 +536,7 @@ footer a{color:var(--accent-border)}
   </div>
 </div>
 
+<!-- All Reviews Modal -->
 <div class="modal-overlay" id="all-reviews-modal">
   <div class="modal-box" style="max-width:700px">
     <h3>All Client Comments &amp; Reviews</h3>
@@ -528,6 +549,10 @@ footer a{color:var(--accent-border)}
 </div>
 
 <script>
+// IMPORTANT: Formspree Endpoint to deliver emails directly to comfort.encode.workplace@gmail.com
+// Replace 'YOUR_FORMSPREE_ID' with your actual Formspree ID (e.g., 'https://formspree.io/f/mqkvpwqe')
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/comfort.encode.workplace@gmail.com'; 
+
 function closeMenu(){document.getElementById('mmenu').classList.remove('open')}
 function openModal(){document.getElementById('strategy-modal').classList.add('active')}
 function closeModal(){document.getElementById('strategy-modal').classList.remove('active')}
@@ -544,6 +569,22 @@ function closeDetailModal(){
 function openAllReviewsModal(){document.getElementById('all-reviews-modal').classList.add('active')}
 function closeAllReviewsModal(){document.getElementById('all-reviews-modal').classList.remove('active')}
 
+/* Animated Toast Notifications */
+function showToast(message, isError = false) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  if(isError) toast.style.borderLeftColor = '#e53e3e';
+  toast.textContent = message;
+  container.appendChild(toast);
+  
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
 let currentTierPrice=4999;
 function selectPricingTier(members,price){
   document.getElementById('builder-size-select').value=members;
@@ -557,11 +598,92 @@ function handleSizeSelectChange(){
 }
 function updatePriceDisplay(val){document.getElementById('calculated-price').textContent=`$${val.toLocaleString()} / mo`}
 
+/* Form Handling & Email Submission */
+async function sendEmailSubmission(formData) {
+  try {
+    const response = await fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    return response.ok;
+  } catch(err) {
+    console.error('Email Submission Error:', err);
+    return false;
+  }
+}
+
+/* 1. Schedule Strategy Call Submission */
+async function handleStrategyFormSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('strat-submit-btn');
+  const textSpan = btn.querySelector('.btn-text');
+  
+  const name = document.getElementById('strat-name').value;
+  const email = document.getElementById('strat-email').value;
+  const message = document.getElementById('strat-msg').value;
+
+  btn.disabled = true;
+  textSpan.innerHTML = '<span class="spinner"></span> Sending...';
+
+  const success = await sendEmailSubmission({
+    form_type: 'Schedule Strategy Consultation Call',
+    name: name,
+    email: email,
+    message: message,
+    recipient: 'comfort.encode.workplace@gmail.com'
+  });
+
+  btn.disabled = false;
+  textSpan.textContent = 'Submit request';
+
+  if (success) {
+    showToast('Strategy call requested! We will email you shortly.');
+    document.getElementById('strategy-modal-form').reset();
+    closeModal();
+  } else {
+    showToast('Failed to send request. Please try again or email us directly.', true);
+  }
+}
+
+/* 2. Custom Pod Application Submission */
+async function handlePodApplicationSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('pod-submit-btn');
+  const textSpan = btn.querySelector('.btn-text');
+  
+  const name = document.getElementById('cust-name').value;
+  const email = document.getElementById('cust-email').value;
+  const podSize = document.getElementById('builder-size-select').value;
+
+  btn.disabled = true;
+  textSpan.innerHTML = '<span class="spinner"></span> Processing...';
+
+  const success = await sendEmailSubmission({
+    form_type: 'Custom Pod Application',
+    name: name,
+    email: email,
+    pod_size: `${podSize} Specialist Pod`,
+    estimated_rate: `$${currentTierPrice}/mo`,
+    recipient: 'comfort.encode.workplace@gmail.com'
+  });
+
+  btn.disabled = false;
+  textSpan.textContent = 'Dispatch pod application';
+
+  if (success) {
+    showToast('Pod application received! Our team will contact you shortly.');
+    document.getElementById('pod-application-form').reset();
+  } else {
+    showToast('Failed to send application. Please try again.', true);
+  }
+}
+
+/* Reviews Logic */
 let reviewsData = [];
 
 function renderReviews(){
   const sorted = [...reviewsData].sort((a,b)=>b.rating - a.rating);
-  
   const container = document.getElementById('reviews-container');
   const allContainer = document.getElementById('all-reviews-container');
   const viewAllContainer = document.getElementById('view-all-container');
@@ -578,13 +700,8 @@ function renderReviews(){
   }
 
   const topThree = sorted.slice(0, 3);
-  topThree.forEach(rev => {
-    container.appendChild(createReviewCard(rev));
-  });
-
-  sorted.forEach(rev => {
-    allContainer.appendChild(createReviewCard(rev));
-  });
+  topThree.forEach(rev => container.appendChild(createReviewCard(rev)));
+  sorted.forEach(rev => allContainer.appendChild(createReviewCard(rev)));
 
   viewAllContainer.style.display = 'block';
 }
@@ -620,16 +737,7 @@ function submitPublicReview(e){
 
   document.getElementById('rev-name').value = '';
   document.getElementById('rev-body').value = '';
-  alert('Thank you! Your review has been published live and organized by rating.');
-}
-
-function dispatchPodRequest(e){
-  e.preventDefault();
-  const name=document.getElementById('cust-name').value;
-  const email=document.getElementById('cust-email').value;
-  const subject=encodeURIComponent(`New Custom Pod Application: ${name}`);
-  const body=encodeURIComponent(`Name: ${name}\nEmail: ${email}\nEstimated Rate: $${currentTierPrice}/mo`);
-  window.location.href=`mailto:comfort.encode.workplace@gmail.com?subject=${subject}&body=${body}`;
+  showToast('Thank you! Your review has been published.');
 }
 
 function toggleFaq(btn){
@@ -640,8 +748,20 @@ function toggleFaq(btn){
   if(!open){item.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px'}
 }
 
+/* Intersection Observer for Scroll Animations */
 window.addEventListener('DOMContentLoaded', () => {
   renderReviews();
+
+  const observerOptions = { threshold: 0.1 };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
 });
 </script>
 </body>
