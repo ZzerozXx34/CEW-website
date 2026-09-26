@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ComfortEncodeWorkplace (C.E.W) — Managed Execution Pods</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAFAF9; --surface:#FFFFFF; --surface-muted:#F5F1EC; --ink:#1C1917; --muted:#57534E; --muted-light:#A8A29E;
+  --line:#E7E1D8; --line-strong:#27221D; --accent:#B85B35; --accent-hover:#9E4A28; --accent-soft:#FBF2EE; --accent-border:#E8C3B3;
+  --radius-sm:6px; --radius-md:10px; --radius-lg:14px;
+  --shadow-md:0 12px 30px rgba(28,25,23,.08);
+}
+:root:not([data-theme]){color-scheme:light}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img,svg{max-width:100%;display:block}
+.serif{font-family:'Playfair Display',Georgia,serif}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+section{padding:96px 0;border-bottom:1px solid var(--line)}
+h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;font-weight:700;line-height:1.16;color:var(--ink);letter-spacing:-.01em}
+h1{font-size:clamp(36px,5vw,58px)}
+h2{font-size:clamp(27px,3.4vw,38px);margin-bottom:14px}
+h3{font-size:20px;font-weight:700}
+p{color:var(--muted)}
+.lede{max-width:640px;font-size:16.5px}
+.eyebrow{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;display:inline-flex;align-items:center;gap:8px}
+.eyebrow::before{content:'';width:16px;height:1px;background:var(--accent)}
+.btn{font-family:inherit;font-size:13.5px;font-weight:700;letter-spacing:.02em;border:1px solid var(--accent);color:#fff;background:var(--accent);padding:14px 26px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s ease,background .15s ease,box-shadow .15s ease;cursor:pointer}
+.btn:hover{background:var(--accent-hover);border-color:var(--accent-hover);transform:translateY(-1px);box-shadow:0 8px 18px rgba(184,91,53,.28)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-strong)}
+.btn-ghost:hover{background:var(--surface-muted);box-shadow:none}
+.btn-sm{padding:8px 14px;font-size:12px}
+.btn:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header{position:sticky;top:0;z-index:100;background:rgba(250,250,249,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.wrap{display:flex;align-items:center;justify-content:space-between;height:74px}
+.logo{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;display:flex;align-items:center;gap:9px}
+.logo-mark{width:9px;height:9px;background:var(--accent);border-radius:2px}
+.navlinks{display:none;gap:26px;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:var(--muted)}
+.navlinks a:hover{color:var(--ink)}
+@media(min-width:920px){.navlinks{display:flex}}
+.nav-actions{display:flex;align-items:center;gap:14px}
+.burger{display:flex;background:none;border:1px solid var(--line-strong);border-radius:6px;padding:9px 11px}
+@media(min-width:920px){.burger{display:none}}
+.burger span{display:block;width:16px;height:2px;background:var(--ink);position:relative}
+.burger span::before,.burger span::after{content:'';position:absolute;left:0;width:16px;height:2px;background:var(--ink)}
+.burger span::before{top:-5px}.burger span::after{top:5px}
+.mobile-menu{display:none;flex-direction:column;padding:8px 28px 20px;gap:14px;border-bottom:1px solid var(--line);background:var(--surface)}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:14px;font-weight:600;color:var(--muted);padding:6px 0}
+@media(min-width:920px){.mobile-menu{display:none!important}}
+
+.hero{padding:84px 0 88px;background:var(--surface)}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:44px;align-items:center}
+@media(min-width:960px){.hero-grid{grid-template-columns:1.1fr .9fr}}
+.hero p.lede{font-size:18px;margin:20px 0 30px;color:#3F3B37}
+.hero-visual{background:var(--surface-muted);border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px}
+.pillar-stack{display:flex;flex-direction:column;gap:12px}
+.pillar-card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius-sm);padding:17px 20px}
+.pillar-card strong{font-size:15.5px;display:block;margin-bottom:4px}
+.pillar-card p{font-size:13px}
+
+.stats-banner{background:var(--surface-muted);border-bottom:1px solid var(--line);padding:34px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:24px;text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;line-height:1}
+.stat-label{font-size:11.5px;font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;text-transform:uppercase;margin-top:6px;letter-spacing:.05em}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-md);padding:26px;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease}
+.card:hover{border-color:var(--accent-border);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.grid-3{display:grid;grid-template-columns:1fr;gap:22px;margin-top:38px}
+@media(min-width:760px){.grid-3{grid-template-columns:repeat(3,1fr)}}
+.grid-4{display:grid;grid-template-columns:1fr;gap:22px;margin-top:38px}
+@media(min-width:760px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.grid-4{grid-template-columns:repeat(4,1fr)}}
+.tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.step-num{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--accent-border);margin-bottom:6px}
+.benefit-box{background:var(--accent-soft);border-left:3px solid var(--accent);padding:14px 16px;margin-top:18px;font-size:13px;color:var(--ink)}
+.benefit-box strong{color:var(--accent);display:block;margin-bottom:4px;font-size:12.5px}
+.service-card{display:flex;flex-direction:column;justify-content:space-between}
+.case-result{margin-top:16px;font-weight:700;color:var(--ink);font-size:13px;border-top:1px solid var(--line);padding-top:12px}
+
+/* Detailed Catalog Styles */
+.catalog-category{margin-top:40px}
+.catalog-category h3{font-size:22px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.catalog-category h3 span{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--accent-soft);color:var(--accent);padding:4px 10px;border-radius:20px;border:1px solid var(--accent-border)}
+.catalog-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:20px}
+@media(min-width:760px){.catalog-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.catalog-grid{grid-template-columns:repeat(3,1fr)}}
+.catalog-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-md);padding:22px;display:flex;flex-direction:column;justify-content:space-between}
+.catalog-item h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.catalog-item p{font-size:13.5px;margin-bottom:16px}
+
+.matrix-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface);margin-top:36px}
+table{width:100%;border-collapse:collapse;min-width:720px;font-size:14px}
+th,td{text-align:left;padding:16px 22px;border-bottom:1px solid var(--line)}
+tbody tr:last-child td{border-bottom:none}
+th{background:var(--surface-muted);font-weight:700;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+td:last-child strong{color:var(--accent)}
+
+.pricing-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:38px}
+@media(min-width:640px){.pricing-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.pricing-grid{grid-template-columns:repeat(4,1fr)}}
+.pricing-card{position:relative;display:flex;flex-direction:column}
+.pricing-card.popular{border:1.5px solid var(--accent);box-shadow:var(--shadow-md)}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.price{font-family:'Playfair Display',serif;font-size:27px;font-weight:700;margin:14px 0 18px}
+.price span{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted)}
+.pricing-card p{font-size:13px;margin:6px 0 0}
+.pricing-card .btn{margin-top:20px}
+
+.builder{background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--radius-lg);padding:34px;margin-top:34px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+input[type=text],input[type=email],select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);padding:12px 15px;border-radius:var(--radius-sm);font-family:inherit;font-size:14px;color:var(--ink)}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none}
+.builder-row{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:600px){.builder-row{grid-template-columns:1fr 1fr}}
+.builder-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.builder-foot small{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;display:block}
+#calculated-price{font-family:'Playfair Display',serif;font-size:28px;font-weight:700}
+
+.faq-item{border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface);overflow:hidden}
+.faq-q{width:100%;text-align:left;background:none;border:0;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:'Playfair Display',serif;font-weight:700;font-size:16.5px;color:var(--ink)}
+.faq-q::after{content:'+';font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;color:var(--accent);flex:none;transition:transform .2s ease}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease}
+.faq-a p{padding:0 22px 20px;font-size:14px}
+.faq-list{display:grid;gap:14px;margin-top:36px}
+
+.results-preview-banner{background:var(--surface-muted);border:1px solid var(--line);border-radius:var(--radius-lg);padding:40px;text-align:center;margin-top:38px}
+.results-preview-banner h3{margin-bottom:10px}
+.results-preview-banner p{max-width:600px;margin:0 auto 24px auto;font-size:14.5px}
+
+.review-submission{background:var(--surface-muted);border:1px solid var(--line);border-radius:var(--radius-lg);padding:30px;margin-bottom:36px}
+.reviews-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-bottom:24px}
+.review-header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.review-card p{font-size:14px;color:var(--ink)}
+.review-rating{color:#E59838;font-weight:700;font-size:13px;margin-bottom:6px;font-family:'JetBrains Mono',monospace}
+.reviews-actions{text-align:center;margin-top:20px}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(20,16,13,.72);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.active{display:flex}
+.modal-box{background:var(--surface);border-radius:var(--radius-lg);max-width:560px;width:100%;padding:38px;max-height:90vh;overflow-y:auto;border:1px solid var(--line-strong);position:relative}
+.modal-box h3{margin-bottom:8px}
+
+footer{padding:48px 0;background:#1C1712;color:#A8A29E;font-size:13.5px}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+footer strong{color:#fff;font-family:'Playfair Display',serif;font-size:16px}
+footer a{color:var(--accent-border)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="logo"><span class="logo-mark"></span>ComfortEncodeWorkplace <span class="mono" style="font-size:12px;color:var(--muted)">(C.E.W)</span></div>
+    <div class="navlinks">
+      <a href="#about">About</a><a href="#workflow">System</a><a href="#services">Services</a><a href="#catalog">Catalog</a>
+      <a href="#case-studies">Case Studies</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="#results-vault">Actual Results</a><a href="#reviews">Reviews</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn" onclick="openModal()">Schedule Call</button>
+      <button class="burger" aria-label="Menu" onclick="document.getElementById('mmenu').classList.toggle('open')"><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mmenu">
+    <a href="#about" onclick="closeMenu()">About</a><a href="#workflow" onclick="closeMenu()">System</a>
+    <a href="#services" onclick="closeMenu()">Services</a><a href="#catalog" onclick="closeMenu()">Catalog</a>
+    <a href="#case-studies" onclick="closeMenu()">Case Studies</a><a href="#pricing" onclick="closeMenu()">Pricing</a>
+    <a href="#faq" onclick="closeMenu()">FAQ</a><a href="#results-vault" onclick="closeMenu()">Actual Results</a><a href="#reviews" onclick="closeMenu()">Reviews</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" style="border-bottom:1px solid var(--line)">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Managed execution agency for fast-scaling brands</div>
+        <h1>Stop managing freelancers. Hire an entire execution engine.</h1>
+        <p class="lede">C.E.W deploys dedicated, cross-functional pods under direct leadership oversight — combining expert developers, social media management, video editing, customer support, and daily updates into one system.</p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <a href="#pricing" class="btn">Deploy your pod plan</a>
+          <a href="#about" class="btn btn-ghost">Learn how C.E.W works</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="pillar-stack">
+          <div class="pillar-card"><strong>Expert developers &amp; tech</strong><p>Building websites, handling apps, and fixing bugs without you ever needing to write code.</p></div>
+          <div class="pillar-card"><strong>Content &amp; social media</strong><p>Uploading videos, editing clips, managing social pages, and engaging with your audience.</p></div>
+          <div class="pillar-card"><strong>Operations &amp; support</strong><p>Handling customer support, sorting emails safely, outreach, and daily progress updates.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats-banner">
+    <div class="wrap stats-grid">
+      <div><div class="stat-num">1 Message</div><div class="stat-label">Just send one daily note for tasks</div></div>
+      <div><div class="stat-num">100%</div><div class="stat-label">Zero management overhead for you</div></div>
+      <div><div class="stat-num">Daily</div><div class="stat-label">Structured progress reports sent</div></div>
+      <div><div class="stat-num">3–6</div><div class="stat-label">Dedicated specialists per pod</div></div>
+    </div>
+  </div>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="eyebrow">About ComfortEncodeWorkplace</div>
+      <h2>Built to solve the scaling trap</h2>
+      <p class="lede" style="max-width:800px">Traditional virtual assistant companies hand you raw contractors and turn you into a full-time project manager. Agencies charge high fees and leave you hanging. C.E.W provides completely managed pods handled by our separate team of team managers. You don't have to manage anything — just send one simple message if you need something done today, and our dedicated team takes care of the rest.</p>
+      <div class="grid-3">
+        <div class="card"><div class="tag">01 · Zero management</div><h3>Dedicated Team Managers</h3><p style="margin-top:10px;font-size:14px">A separate team of managers oversees everything so you never have to micromanage your workers.</p></div>
+        <div class="card"><div class="tag">02 · Expert talent</div><h3>Top-Tier Specialists</h3><p style="margin-top:10px;font-size:14px">Skilled developers, video editors, and support staff working seamlessly to grow your business.</p></div>
+        <div class="card"><div class="tag">03 · Daily clarity</div><h3>Daily Progress Updates</h3><p style="margin-top:10px;font-size:14px">Receive daily updates every single day on what happened and what work we completed.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="workflow" style="background:var(--surface)">
+    <div class="wrap">
+      <div class="eyebrow">Our operational methodology</div>
+      <h2>How C.E.W operates your business engine</h2>
+      <p class="lede">A simple process designed to get your team running smoothly without any headaches.</p>
+      <div class="grid-4">
+        <div class="card"><div class="step-num">01</div><h3>Quick setup call</h3><p style="margin-top:8px;font-size:14px">We look at your tasks and goals to match you with your 3–6 specialist pod.</p></div>
+        <div class="card"><div class="step-num">02</div><h3>Connect &amp; align</h3><p style="margin-top:8px;font-size:14px">We sync up with your tools and set clear instructions on how you want things handled.</p></div>
+        <div class="card"><div class="step-num">03</div><h3>Daily execution</h3><p style="margin-top:8px;font-size:14px">Just send one message with what you need done, and your pod executes it immediately.</p></div>
+        <div class="card"><div class="step-num">04</div><h3>Daily updates</h3><p style="margin-top:8px;font-size:14px">Receive a clear breakdown every day of what got done and what is coming next.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Expanded Complete Service Catalog Section with Detail Buttons -->
+  <section id="catalog" style="background:var(--surface)">
+    <div class="wrap">
+      <div class="eyebrow">Complete service catalog</div>
+      <h2>Every service we handle for your business</h2>
+      <p class="lede">Browse our full list of services below. Click the button on any card to read the complete, detailed breakdown.</p>
+
+      <div class="catalog-category">
+        <h3>Content, Video &amp; Social Media <span>4 Services</span></h3>
+        <div class="catalog-grid">
+          <div class="catalog-item">
+            <div>
+              <h4>Social Media Management &amp; Uploading</h4>
+              <p>We manage your social accounts, upload videos, schedule content, and interact with people commenting or messaging your pages.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Social Media Management &amp; Uploading', 'We take full control of keeping your social media channels active and vibrant. Our team uploads your videos, schedules posts ahead of time, and actively interacts with your audience by replying to comments and direct messages to build community engagement without you lifting a finger.')">Read full details</button>
+          </div>
+          <div class="catalog-item">
+            <div>
+              <h4>Video Editing</h4>
+              <p>Professional video editing for your reels, TikToks, YouTube videos, and ads to keep your audience hooked.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Video Editing', 'High-quality video editing tailored for growth. We trim footage, add engaging captions, sound effects, B-roll, and dynamic transitions to make your long-form or short-form videos look polished, professional, and optimized to keep viewers watching until the very end.')">Read full details</button>
+          </div>
+          <div class="catalog-item">
+            <div>
+              <h4>Ad Management</h4>
+              <p>Setting up, monitoring, and tweaking your paid advertising campaigns across Facebook, Instagram, and other platforms to bring in results.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Ad Management', 'We oversee your paid advertising campaigns to ensure your marketing budget is spent effectively. From launching ad sets and monitoring performance metrics to adjusting targeting and testing creative variations, we handle the technical side of running profitable ads.')">Read full details</button>
+          </div>
+          <div class="catalog-item">
+            <div>
+              <h4>Automated Client Outreach Systems</h4>
+              <p>Setting up automated outreach systems built by our expert developers to help you reach out to prospective clients smoothly.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Automated Client Outreach Systems', 'Our expert developers set up automated client outreach systems and pipelines that run smoothly in the background. This allows your business to connect with new prospects and generate leads automatically, saving your team hours of manual outreach work every single day.')">Read full details</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="catalog-category">
+        <h3>Support, Email &amp; Admin Ops <span>4 Services</span></h3>
+        <div class="catalog-grid">
+          <div class="catalog-item">
+            <div>
+              <h4>Email Management (Safe &amp; Guided)</h4>
+              <p>We reply to emails for you, following your exact instructions so we never do anything unpleasant or unapproved for your brand.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Email Management (Safe &amp; Guided)', 'We handle your inbox and reply to emails on your behalf. To ensure complete peace of mind, we only reply to emails where we have clear instructions from you. If a new or tricky situation comes up without prior guidance, we check with you first because we never want to do anything unpleasant or outside your comfort zone.')">Read full details</button>
+          </div>
+          <div class="catalog-item">
+            <div>
+              <h4>Customer Support Handling</h4>
+              <p>Handling customer support tickets, questions, and inquiries whenever your customers need help.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Customer Support Handling', 'We provide reliable customer support to keep your buyers happy and satisfied. Our team answers customer questions, resolves support tickets, and handles inquiries promptly so your customers always feel valued and supported by your brand.')">Read full details</button>
+          </div>
+          <div class="catalog-item">
+            <div>
+              <h4>Deep Research &amp; Decision Making Help</h4>
+              <p>Conducting hours of research when you are stuck or having trouble making decisions, taking that heavy workload off your plate.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Deep Research &amp; Decision Making Help', 'Proper research takes hours of deep work which can easily drain your time and energy. Whenever you are stuck, evaluating options, or trying to make an important business decision, we take that entire research burden off your plate and deliver clear, summarized insights.')">Read full details</button>
+          </div>
+          <div class="catalog-item">
+            <div>
+              <h4>General Task Organization</h4>
+              <p>Organizing your files, tasks, schedules, and workflows so everything stays clean, tidy, and easy to find.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('General Task Organization', 'We organize your digital workspace, files, notes, and daily schedules. Keeping everything structured and tidy means you and your team never waste time searching for lost documents or wondering what tasks are due next.')">Read full details</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="catalog-category">
+        <h3>Development &amp; Management <span>3 Services</span></h3>
+        <div class="catalog-grid">
+          <div class="catalog-item">
+            <div>
+              <h4>Expert Developers &amp; Tech Builds</h4>
+              <p>Expert developers handling website updates, bug fixes, landing pages, and technical tasks seamlessly.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Expert Developers &amp; Tech Builds', 'Our team features expert developers who handle all your technical needs—from updating your website and building landing pages to fixing bugs and managing software integrations. You get top-tier technical execution without hiring expensive full-time engineers.')">Read full details</button>
+          </div>
+          <div class="catalog-item">
+            <div>
+              <h4>Dedicated Team Managers (Zero Management)</h4>
+              <p>A separate team of managers oversees the workers for you, so you only need to send one single message for your daily tasks.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Dedicated Team Managers (Zero Management)', 'You will never have to manage workers or assign individual chores. We have a separate team of professional team managers who oversee the staff for you. All you have to do is send one single message when you need something specific done that day.')">Read full details</button>
+          </div>
+          <div class="catalog-item">
+            <div>
+              <h4>Daily Progress Updates</h4>
+              <p>Clear updates sent to you every single day detailing exactly what happened and what work was completed.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openDetailModal('Daily Progress Updates', 'Transparency is key to our partnership. We send you structured updates every single day outlining exactly what happened, what tasks were completed, and what our team is working on next, giving you total peace of mind without needing check-in meetings.')">Read full details</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="case-studies" style="background:var(--surface)">
+    <div class="wrap">
+      <div class="eyebrow">Real client results</div>
+      <h2>How fast-growing companies scale with C.E.W pods</h2>
+      <div class="grid-3">
+        <div class="card"><div class="tag">Tech &amp; Dev</div><h3>Website refactor &amp; 24/7 deployment</h3><p style="margin-top:10px;font-size:14px">A software brand needed a full frontend update with 100% uptime and zero stress.</p><div class="case-result">Shipped early with zero bugs through our managed team handoffs.</div></div>
+        <div class="card"><div class="tag">Content &amp; Social</div><h3>Video editing &amp; social media scale</h3><p style="margin-top:10px;font-size:14px">A growing brand needed daily video uploads, editing, and active community engagement.</p><div class="case-result">Saved 20+ hours weekly while doubling viewer engagement.</div></div>
+        <div class="card"><div class="tag">Operations &amp; Support</div><h3>Automated outreach &amp; email handling</h3><p style="margin-top:10px;font-size:14px">An agency was losing hours daily to manual emails and client prospecting work.</p><div class="case-result">Automated lead outreach and safely streamlined inbox management.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results-vault">
+    <div class="wrap">
+      <div class="eyebrow">Proof &amp; live metrics vault</div>
+      <h2>Want to see our actual client results and dashboards?</h2>
+      <div class="results-preview-banner">
+        <h3>Book a personal walkthrough with our team</h3>
+        <p>To protect our active clients' proprietary metrics and private workflows, we do not publish raw data publicly. Book a 1-on-1 strategy session to have us walk you through the actual results personally.</p>
+        <button class="btn" onclick="openModal()">Book a personal walkthrough</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="matrix">
+    <div class="wrap">
+      <div class="eyebrow">The unfair advantage</div>
+      <h2>Why C.E.W pods outperform traditional hiring</h2>
+      <div class="matrix-wrap">
+        <table>
+          <thead><tr><th>Execution factor</th><th>Freelancer marketplaces</th><th>Traditional agencies</th><th>C.E.W</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Management burden</strong></td><td>High — you're the PM</td><td>Medium — slow account managers</td><td><strong>Zero — managed by our team leads</strong></td></tr>
+            <tr><td><strong>Communication</strong></td><td>Constant back-and-forth</td><td>Slow replies</td><td><strong>Just send 1 message a day</strong></td></tr>
+            <tr><td><strong>Progress visibility</strong></td><td>Fragmented chats</td><td>Weekly status calls</td><td><strong>Daily structured updates</strong></td></tr>
+            <tr><td><strong>Service coverage</strong></td><td>Single skill per hire</td><td>Limited scope</td><td><strong>Devs, video, social, support &amp; ops</strong></td></tr>
+            <tr><td><strong>Pricing structure</strong></td><td>Unpredictable hourly billing</td><td>Retainers + extra fees</td><td><strong>Flat rate from $2,999/mo</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" style="background:var(--surface)">
+    <div class="wrap">
+      <div class="eyebrow">Flat-rate transparent pricing</div>
+      <h2>Select your managed pod configuration</h2>
+      <p class="lede">No hourly surprises, no hidden overhead, no long-term restrictive contracts.</p>
+      <div class="pricing-grid">
+        <div class="card pricing-card"><h3>3-Person pod</h3><p>Core developer, content creator, and ops specialist for early scaling.</p><div class="price">$2,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(3,2999)">Select 3-person plan</button></div>
+        <div class="card pricing-card"><h3>4-Person pod</h3><p>Balanced squad for active web, video editing, and support work.</p><div class="price">$3,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(4,3999)">Select 4-person plan</button></div>
+        <div class="card pricing-card popular"><div class="popular-badge">Most popular</div><h3>5-Person pod</h3><p>Full-stack squad running complete daily shifts across all pillars.</p><div class="price">$4,999<span> /mo</span></div><button class="btn" onclick="selectPricingTier(5,4999)">Select 5-person plan</button></div>
+        <div class="card pricing-card"><h3>6-Person pod</h3><p>Enterprise squad for high-volume development and social scaling.</p><div class="price">$5,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(6,5999)">Select 6-person plan</button></div>
+      </div>
+
+      <div class="builder" id="pod-builder">
+        <h3>Configure &amp; deploy your custom pod</h3>
+        <p style="margin:8px 0 20px;font-size:14px">Select your capacity and submit your details to launch with our managed team.</p>
+        <div class="field">
+          <label>Selected specialist capacity</label>
+          <select id="builder-size-select" onchange="handleSizeSelectChange()">
+            <option value="3">3 members — Dev + Content + Support ($2,999/mo)</option>
+            <option value="4">4 members — Expanded tech &amp; video squad ($3,999/mo)</option>
+            <option value="5" selected>5 members — Full cross-functional squad ($4,999/mo)</option>
+            <option value="6">6 members — Enterprise scale squad ($5,999/mo)</option>
+          </select>
+        </div>
+        <form onsubmit="dispatchPodRequest(event)">
+          <div class="builder-row">
+            <div class="field"><label>Your name</label><input type="text" id="cust-name" required placeholder="e.g. David Sterling"></div>
+            <div class="field"><label>Work email address</label><input type="email" id="cust-email" required placeholder="david@company.com"></div>
+          </div>
+          <div class="builder-foot">
+            <div><small>Estimated flat rate</small><div id="calculated-price">$4,999 / mo</div></div>
+            <button type="submit" class="btn">Dispatch pod application</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="eyebrow">Answers to your questions</div>
+      <h2>Frequently asked questions</h2>
+      <div class="faq-list">
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How quickly can our C.E.W pod go live?<span></span></button><div class="faq-a"><p>Once you complete your strategy consultation and select a pod size, we set up communication and align on your instructions within 24–48 hours.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What does zero-management burden mean?<span></span></button><div class="faq-a"><p>You never manage workers. Our separate team of team managers oversees everyone. You just send one daily message for tasks you want done.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How do you handle my emails safely?<span></span></button><div class="faq-a"><p>We reply according to your exact instructions. If an email comes in without prior guidelines, we check with you first to ensure nothing unpleasant or unapproved is done.</p></div></div>
+        <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can we change our pod size later?<span></span></button><div class="faq-a"><p>Yes — scale your pod size up or down anytime with 5 days' notice as your workload changes.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews" style="background:var(--surface);border-bottom:none">
+    <div class="wrap">
+      <div class="eyebrow">Live client feedback</div>
+      <h2>Client reviews &amp; community ratings</h2>
+      <p class="lede" style="margin-bottom:30px">Submit a review below to add it instantly. The top highest-rated reviews are pinned to the top.</p>
+
+      <div class="review-submission">
+        <h3 style="margin-bottom:14px">Leave a public review</h3>
+        <form onsubmit="submitPublicReview(event)">
+          <div class="builder-row">
+            <div class="field"><label>Your name / title</label><input type="text" id="rev-name" required placeholder="e.g. Sarah Jenkins — CEO, TechFlow"></div>
+            <div class="field"><label>Rating (1 to 5 Stars)</label>
+              <select id="rev-rating">
+                <option value="5" selected>★★★★★ (5/5 Stars - Exceptional)</option>
+                <option value="4">★★★★☆ (4/5 Stars - Great)</option>
+                <option value="3">★★★☆☆ (3/5 Stars - Good)</option>
+                <option value="2">★★☆☆☆ (2/5 Stars - Fair)</option>
+                <option value="1">★☆☆☆☆ (1/5 Stars - Poor)</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Service / pod tier used</label>
+            <select id="rev-service">
+              <option>5-Person managed pod</option>
+              <option>Content &amp; video editing pod</option>
+              <option>Technical development pod</option>
+              <option>Support &amp; email ops pod</option>
+            </select>
+          </div>
+          <div class="field"><label>How did C.E.W make your life easier?</label><textarea id="rev-body" rows="4" required placeholder="Describe how your pod handled the workload and results achieved..."></textarea></div>
+          <button type="submit" class="btn">Publish review</button>
+        </form>
+      </div>
+
+      <div class="reviews-list" id="reviews-container"></div>
+      
+      <div class="reviews-actions" id="view-all-container" style="display:none">
+        <button class="btn btn-ghost" onclick="openAllReviewsModal()">View all comments (<span id="total-reviews-count">0</span>)</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><strong>ComfortEncodeWorkplace (C.E.W)</strong><p style="margin-top:4px">Managed execution pods — zero management overhead.</p></div>
+    <div style="text-align:right">
+      <a href="mailto:comfort.encode.workplace@gmail.com" class="mono">comfort.encode.workplace@gmail.com</a>
+      <p style="margin-top:4px;color:#71717A;font-size:12px">© 2026 ComfortEncodeWorkplace. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="strategy-modal">
+  <div class="modal-box">
+    <h3>Schedule a strategy consultation</h3>
+    <p style="margin-bottom:20px;font-size:14px">Let us evaluate your goals and workflow to design your custom pod and view actual results personally.</p>
+    <form onsubmit="closeModal();alert('Strategy call requested! Our team will reach out shortly.');return false;">
+      <div class="field"><label>Full name</label><input type="text" required placeholder="Alex Morgan"></div>
+      <div class="field"><label>Work email address</label><input type="email" required placeholder="alex@company.com"></div>
+      <div class="field"><label>Primary business objective</label><textarea rows="3" placeholder="Tell us what bottlenecks you want solved..."></textarea></div>
+      <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:22px">
+        <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn">Submit request</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal-box">
+    <h3 id="detail-modal-title">Service Details</h3>
+    <p id="detail-modal-body" style="margin:16px 0 24px;font-size:15px;line-height:1.7"></p>
+    <div style="display:flex;justify-content:flex-end">
+      <button type="button" class="btn btn-ghost" onclick="closeDetailModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="all-reviews-modal">
+  <div class="modal-box" style="max-width:700px">
+    <h3>All Client Comments &amp; Reviews</h3>
+    <p style="margin-bottom:20px;font-size:14px">Browse all community feedback submitted by past and active clients.</p>
+    <div id="all-reviews-container" style="display:grid;gap:16px;max-height:60vh;overflow-y:auto;padding-right:4px"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:22px">
+      <button type="button" class="btn btn-ghost" onclick="closeAllReviewsModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function closeMenu(){document.getElementById('mmenu').classList.remove('open')}
+function openModal(){document.getElementById('strategy-modal').classList.add('active')}
+function closeModal(){document.getElementById('strategy-modal').classList.remove('active')}
+
+function openDetailModal(title, text){
+  document.getElementById('detail-modal-title').textContent = title;
+  document.getElementById('detail-modal-body').textContent = text;
+  document.getElementById('detail-modal').classList.add('active');
+}
+function closeDetailModal(){
+  document.getElementById('detail-modal').classList.remove('active');
+}
+
+function openAllReviewsModal(){document.getElementById('all-reviews-modal').classList.add('active')}
+function closeAllReviewsModal(){document.getElementById('all-reviews-modal').classList.remove('active')}
+
+let currentTierPrice=4999;
+function selectPricingTier(members,price){
+  document.getElementById('builder-size-select').value=members;
+  currentTierPrice=price; updatePriceDisplay(price);
+  document.getElementById('pod-builder').scrollIntoView({behavior:'smooth'});
+}
+function handleSizeSelectChange(){
+  const val=document.getElementById('builder-size-select').value;
+  const prices={'3':2999,'4':3999,'5':4999,'6':5999};
+  currentTierPrice=prices[val]||6000; updatePriceDisplay(currentTierPrice);
+}
+function updatePriceDisplay(val){document.getElementById('calculated-price').textContent=`$${val.toLocaleString()} / mo`}
+
+let reviewsData = [];
+
+function renderReviews(){
+  const sorted = [...reviewsData].sort((a,b)=>b.rating - a.rating);
+  
+  const container = document.getElementById('reviews-container');
+  const allContainer = document.getElementById('all-reviews-container');
+  const viewAllContainer = document.getElementById('view-all-container');
+  const countSpan = document.getElementById('total-reviews-count');
+
+  container.innerHTML = '';
+  allContainer.innerHTML = '';
+  countSpan.textContent = sorted.length;
+
+  if(sorted.length === 0){
+    container.innerHTML = '<p style="color:var(--muted-light);font-style:italic;text-align:center;padding:20px 0;grid-column:1/-1;">No reviews or comments yet. Be the first to share your experience below!</p>';
+    viewAllContainer.style.display = 'none';
+    return;
+  }
+
+  const topThree = sorted.slice(0, 3);
+  topThree.forEach(rev => {
+    container.appendChild(createReviewCard(rev));
+  });
+
+  sorted.forEach(rev => {
+    allContainer.appendChild(createReviewCard(rev));
+  });
+
+  viewAllContainer.style.display = 'block';
+}
+
+function createReviewCard(rev){
+  const card = document.createElement('div');
+  card.className = 'card review-card';
+  const stars = '★'.repeat(rev.rating) + '☆'.repeat(5 - rev.rating);
+  card.innerHTML = `
+    <div class="review-header">
+      <strong>${escapeHtml(rev.name)}</strong>
+      <span class="mono" style="font-size:12px;color:var(--accent)">${escapeHtml(rev.service)}</span>
+    </div>
+    <div class="review-rating">${stars}</div>
+    <p>${escapeHtml(rev.body)}</p>
+  `;
+  return card;
+}
+
+function escapeHtml(str){
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function submitPublicReview(e){
+  e.preventDefault();
+  const name = document.getElementById('rev-name').value;
+  const rating = parseInt(document.getElementById('rev-rating').value, 10);
+  const service = document.getElementById('rev-service').value;
+  const body = document.getElementById('rev-body').value;
+
+  reviewsData.unshift({ name, rating, service, body });
+  renderReviews();
+
+  document.getElementById('rev-name').value = '';
+  document.getElementById('rev-body').value = '';
+  alert('Thank you! Your review has been published live and organized by rating.');
+}
+
+function dispatchPodRequest(e){
+  e.preventDefault();
+  const name=document.getElementById('cust-name').value;
+  const email=document.getElementById('cust-email').value;
+  const subject=encodeURIComponent(`New Custom Pod Application: ${name}`);
+  const body=encodeURIComponent(`Name: ${name}\nEmail: ${email}\nEstimated Rate: $${currentTierPrice}/mo`);
+  window.location.href=`mailto:comfort.encode.workplace@gmail.com?subject=${subject}&body=${body}`;
+}
+
+function toggleFaq(btn){
+  const item=btn.parentElement;
+  const ans=item.querySelector('.faq-a');
+  const open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i=>{i.classList.remove('open');i.querySelector('.faq-a').style.maxHeight=null});
+  if(!open){item.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px'}
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderReviews();
+});
+</script>
+</body>
+</html>
