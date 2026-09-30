@@ -223,6 +223,7 @@ footer a{color:var(--oc-hi);font-family:var(--mono);font-size:14px;transition:co
 @media(max-width:760px){section{padding:84px 0}.hero{padding:132px 0 72px}.stage{margin-top:48px}.stage-frame{padding:6px;border-radius:22px}.stage-in{border-radius:17px}.pillars{padding:0 14px;margin-top:-32px}.builder,.rsub,.mbox{padding:26px}.vault{padding:64px 20px}.item{padding:22px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <header>
@@ -514,20 +515,40 @@ async function handlePodApplicationSubmit(e){
   else showToast('Failed to send application. Please try again.',true)
 }
 
-/* Reviews */
+/* Reviews (Supabase) */
+const SUPABASE_URL='https://zectpavrjlwhpwetzdpk.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_Zp0THeHqH1-XcPjf6Dzb2w_Jrcl2dNz';
+const sb=window.supabase?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
 let reviewsData=[];
+async function loadReviews(){
+  if(!sb){console.error('Supabase library failed to load');return}
+  const {data,error}=await sb.from('reviews').select('*').order('created_at',{ascending:false});
+  if(error){console.error('Load reviews error:',error);showToast('Could not load reviews right now.',true);return}
+  reviewsData=data||[];renderReviews()
+}
 function renderReviews(){
-  const s=[...reviewsData].sort((a,b)=>b.rating-a.rating),c=document.getElementById('reviews-container'),a=document.getElementById('all-reviews-container'),v=document.getElementById('view-all-container');
+  const s=reviewsData,c=document.getElementById('reviews-container'),a=document.getElementById('all-reviews-container'),v=document.getElementById('view-all-container');
   c.innerHTML='';a.innerHTML='';document.getElementById('total-reviews-count').textContent=s.length;
   if(!s.length){c.innerHTML='<p style="font-style:italic;text-align:center;padding:20px 0;grid-column:1/-1">No reviews or comments yet. Be the first to share your experience below!</p>';v.hidden=true;return}
   s.slice(0,3).forEach(r=>c.appendChild(reviewCard(r)));s.forEach(r=>a.appendChild(reviewCard(r)));v.hidden=false
 }
-function reviewCard(r){const d=document.createElement('div');d.className='card review-card';
-  d.innerHTML=`<div class="rh"><strong>${esc(r.name)}</strong><span>${esc(r.service)}</span></div><div class="stars" aria-label="${r.rating} out of 5 stars">${'★'.repeat(r.rating)+'☆'.repeat(5-r.rating)}</div><p>${esc(r.body)}</p>`;return d}
-function submitPublicReview(e){
+function reviewCard(r){
+  const d=document.createElement('div');d.className='card review-card';
+  const when=r.created_at?new Date(r.created_at).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}):'';
+  d.innerHTML=`<div class="rh"><strong>${esc(r.name)}</strong><span>${esc(when)}</span></div><p>${esc(r.content)}</p>`;return d
+}
+async function submitPublicReview(e){
   e.preventDefault();
-  reviewsData.unshift({name:document.getElementById('rev-name').value,rating:parseInt(document.getElementById('rev-rating').value,10),service:document.getElementById('rev-service').value,body:document.getElementById('rev-body').value});
-  renderReviews();document.getElementById('rev-name').value='';document.getElementById('rev-body').value='';showToast('Thank you! Your review has been published.')
+  const form=e.target,btn=form.querySelector('button[type=submit]');
+  const name=document.getElementById('rev-name').value.trim(),content=document.getElementById('rev-body').value.trim();
+  if(!name||!content)return;
+  if(!sb){showToast('Reviews are unavailable right now. Please try again later.',true);return}
+  const label=btn.textContent;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Publishing...';
+  const {data,error}=await sb.from('reviews').insert({name,content}).select();
+  btn.disabled=false;btn.textContent=label;
+  if(error){console.error('Insert review error:',error);showToast('Could not publish your review. Please try again.',true);return}
+  reviewsData.unshift((data&&data[0])||{name,content,created_at:new Date().toISOString()});
+  renderReviews();form.reset();showToast('Thank you! Your review has been published.')
 }
 
 function toggleFaq(btn){
@@ -538,7 +559,7 @@ function toggleFaq(btn){
 
 /* Reveal on scroll + card spotlight */
 window.addEventListener('DOMContentLoaded',()=>{
-  renderReviews();
+  renderReviews();loadReviews();
   const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.08});
   document.querySelectorAll('.rv').forEach(e=>io.observe(e));
   document.addEventListener('pointermove',e=>{const c=e.target.closest&&e.target.closest('.card');if(!c)return;const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')});
