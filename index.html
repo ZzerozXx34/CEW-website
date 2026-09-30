@@ -535,19 +535,22 @@ function renderReviews(){
 function reviewCard(r){
   const d=document.createElement('div');d.className='card review-card';
   const when=r.created_at?new Date(r.created_at).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}):'';
-  d.innerHTML=`<div class="rh"><strong>${esc(r.name)}</strong><span>${esc(when)}</span></div><p>${esc(r.content)}</p>`;return d
+  const rating=parseInt(r.rating,10)||0;
+  const meta=[r.service,when].filter(Boolean).join(' · ');
+  const stars=rating>=1&&rating<=5?`<div class="stars" aria-label="${rating} out of 5 stars">${'★'.repeat(rating)+'☆'.repeat(5-rating)}</div>`:'';
+  d.innerHTML=`<div class="rh"><strong>${esc(r.name)}</strong><span>${esc(meta)}</span></div>${stars}<p>${esc(r.content)}</p>`;return d
 }
 async function submitPublicReview(e){
   e.preventDefault();
   const form=e.target,btn=form.querySelector('button[type=submit]');
-  const name=document.getElementById('rev-name').value.trim(),content=document.getElementById('rev-body').value.trim();
+  const name=document.getElementById('rev-name').value.trim(),content=document.getElementById('rev-body').value.trim(),rating=parseInt(document.getElementById('rev-rating').value,10),service=document.getElementById('rev-service').value;
   if(!name||!content)return;
   if(!sb){showToast('Reviews are unavailable right now. Please try again later.',true);return}
   const label=btn.textContent;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Publishing...';
-  const {data,error}=await sb.from('reviews').insert({name,content}).select();
+  const {data,error}=await sb.from('reviews').insert({name,content,rating,service}).select();
   btn.disabled=false;btn.textContent=label;
   if(error){console.error('Insert review error:',error);showToast('Could not publish your review. Please try again.',true);return}
-  reviewsData.unshift((data&&data[0])||{name,content,created_at:new Date().toISOString()});
+  reviewsData.unshift((data&&data[0])||{name,content,rating,service,created_at:new Date().toISOString()});
   renderReviews();form.reset();showToast('Thank you! Your review has been published.')
 }
 
