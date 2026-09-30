@@ -164,7 +164,7 @@ th:last-child{color:#141414;background:linear-gradient(180deg,#E6A26D,var(--oc))
 
 /* Pricing */
 .price-grid{display:grid;gap:18px;margin-top:64px}
-@media(min-width:640px){.price-grid{grid-template-columns:repeat(2,1fr)}}@media(min-width:1060px){.price-grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:900px){.price-grid{grid-template-columns:repeat(3,1fr)}}
 .pc{display:flex;flex-direction:column;padding:34px 28px;overflow:visible}
 .pc .btn{margin-top:auto;width:100%}
 .pc h3{font-size:22px}
@@ -328,7 +328,7 @@ footer a{color:var(--oc-hi);font-family:var(--mono);font-size:14px;transition:co
         <tr><td><strong>Communication</strong></td><td>Constant back-and-forth</td><td>Slow replies</td><td><strong>Just send 1 message a day</strong></td></tr>
         <tr><td><strong>Progress visibility</strong></td><td>Fragmented chats</td><td>Weekly status calls</td><td><strong>Daily structured updates</strong></td></tr>
         <tr><td><strong>Service coverage</strong></td><td>Single skill per hire</td><td>Limited scope</td><td><strong>Devs, video, social, support &amp; ops</strong></td></tr>
-        <tr><td><strong>Pricing structure</strong></td><td>Unpredictable hourly billing</td><td>Retainers + extra fees</td><td><strong>Flat rate from $2,999/mo</strong></td></tr>
+        <tr><td><strong>Pricing structure</strong></td><td>Unpredictable hourly billing</td><td>Retainers + extra fees</td><td><strong>Flat rate from $3,499/mo</strong></td></tr>
       </tbody></table></div>
   </div></section>
 
@@ -337,27 +337,25 @@ footer a{color:var(--oc-hi);font-family:var(--mono);font-size:14px;transition:co
     <h2 class="rv">Select your managed pod configuration</h2>
     <p class="lede rv">No hourly surprises, no hidden overhead, no long-term restrictive contracts.</p>
     <div class="price-grid">
-      <div class="card pc rv"><h3>3-Person pod</h3><p>Core developer, content creator, and ops specialist for early scaling.</p><div class="price">$2,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(3,2999)">Select 3-person plan</button></div>
-      <div class="card pc rv"><h3>4-Person pod</h3><p>Balanced squad for active web, video editing, and support work.</p><div class="price">$3,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(4,3999)">Select 4-person plan</button></div>
-      <div class="card pc pop rv"><div class="badge">Most popular</div><h3>5-Person pod</h3><p>Full-stack squad running complete daily shifts across all pillars.</p><div class="price">$4,999<span> /mo</span></div><button class="btn" onclick="selectPricingTier(5,4999)">Select 5-person plan</button></div>
-      <div class="card pc rv"><h3>6-Person pod</h3><p>Enterprise squad for high-volume development and social scaling.</p><div class="price">$5,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier(6,5999)">Select 6-person plan</button></div>
+      <div class="card pc rv"><h3>Small Pod (3 people)</h3><p>Core developer, content creator, and ops specialist for early scaling.</p><div class="price">$3,499<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier('small',3499)">Select Small Pod</button></div>
+      <div class="card pc pop rv"><div class="badge">Most popular</div><h3>Medium Pod (5 people)</h3><p>Full-stack squad running complete daily shifts across all pillars.</p><div class="price">$5,999<span> /mo</span></div><button class="btn" onclick="selectPricingTier('medium',5999)">Select Medium Pod</button></div>
+      <div class="card pc rv"><h3>Large Pod (6+ people)</h3><p>Enterprise squad for high-volume development and social scaling.</p><div class="price">$8,999<span> /mo</span></div><button class="btn btn-ghost" onclick="selectPricingTier('large',8999)">Select Large Pod</button></div>
     </div>
     <div class="builder rv" id="pod-builder">
       <h3>Configure &amp; deploy your custom pod</h3>
       <p style="margin:8px 0 22px">Select your capacity and submit your details to launch with our managed team.</p>
       <div class="field"><label for="builder-size-select">Selected specialist capacity</label>
         <select id="builder-size-select" onchange="handleSizeSelectChange()">
-          <option value="3">3 members — Dev + Content + Support ($2,999/mo)</option>
-          <option value="4">4 members — Expanded tech &amp; video squad ($3,999/mo)</option>
-          <option value="5" selected>5 members — Full cross-functional squad ($4,999/mo)</option>
-          <option value="6">6 members — Enterprise scale squad ($5,999/mo)</option>
+          <option value="small">Small Pod (3 people) — $3,499/mo</option>
+          <option value="medium" selected>Medium Pod (5 people) — $5,999/mo</option>
+          <option value="large">Large Pod (6+ people) — $8,999/mo</option>
         </select></div>
       <form id="pod-application-form" onsubmit="handlePodApplicationSubmit(event)">
         <div class="brow">
           <div class="field"><label for="cust-name">Your name</label><input type="text" id="cust-name" required placeholder="e.g. David Sterling"></div>
           <div class="field"><label for="cust-email">Work email address</label><input type="email" id="cust-email" required placeholder="david@company.com"></div>
         </div>
-        <div class="bfoot"><div><small>Estimated flat rate</small><div id="calculated-price">$4,999 / mo</div></div>
+        <div class="bfoot"><div><small>Estimated flat rate</small><div id="calculated-price">$5,999 / mo</div></div>
           <button type="submit" class="btn" id="pod-submit-btn"><span class="btn-text">Dispatch pod application</span></button></div>
       </form>
     </div>
@@ -393,7 +391,7 @@ footer a{color:var(--oc-hi);font-family:var(--mono);font-size:14px;transition:co
             </select></div>
         </div>
         <div class="field"><label for="rev-service">Service / pod tier used</label>
-          <select id="rev-service"><option>3-Person managed pod</option><option>4-Person managed pod</option><option selected>5-Person managed pod</option><option>6-Person managed pod</option><option>Custom-sized pod</option></select></div>
+          <select id="rev-service"><option>Small Pod (3 people)</option><option selected>Medium Pod (5 people)</option><option>Large Pod (6+ people)</option><option>Custom-sized pod</option></select></div>
         <div class="field"><label for="rev-body">How did C.E.W make your life easier?</label><textarea id="rev-body" rows="4" required placeholder="Describe how your pod handled the workload and results achieved..."></textarea></div>
         <button type="submit" class="btn">Publish review</button>
       </form>
@@ -490,9 +488,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 function showToast(msg,err=false){const c=document.getElementById('toast-container'),t=document.createElement('div');t.className='toast';if(err)t.style.borderLeftColor='#e5484d';t.textContent=msg;t.setAttribute('role','status');c.appendChild(t);setTimeout(()=>t.classList.add('show'),10);setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},4000)}
 
 /* Pricing */
-let currentTierPrice=4999;
+let currentTierPrice=5999;
 function selectPricingTier(m,p){document.getElementById('builder-size-select').value=m;currentTierPrice=p;updatePriceDisplay(p);document.getElementById('pod-builder').scrollIntoView({behavior:'smooth'})}
-function handleSizeSelectChange(){const v=document.getElementById('builder-size-select').value;currentTierPrice={'3':2999,'4':3999,'5':4999,'6':5999}[v]||6000;updatePriceDisplay(currentTierPrice)}
+function handleSizeSelectChange(){const v=document.getElementById('builder-size-select').value;currentTierPrice={small:3499,medium:5999,large:8999}[v]||5999;updatePriceDisplay(currentTierPrice)}
 function updatePriceDisplay(v){document.getElementById('calculated-price').textContent=`$${v.toLocaleString()} / mo`}
 
 /* Forms */
@@ -508,9 +506,9 @@ async function handleStrategyFormSubmit(e){
 }
 async function handlePodApplicationSubmit(e){
   e.preventDefault();const btn=document.getElementById('pod-submit-btn'),ts=btn.querySelector('.btn-text');
-  const name=document.getElementById('cust-name').value,email=document.getElementById('cust-email').value,podSize=document.getElementById('builder-size-select').value;
+  const name=document.getElementById('cust-name').value,email=document.getElementById('cust-email').value,sel=document.getElementById('builder-size-select'),podSize=sel.options[sel.selectedIndex].text;
   btn.disabled=true;ts.innerHTML='<span class="spinner"></span> Processing...';
-  const ok=await sendEmailSubmission({form_type:'Custom Pod Application',name,email,pod_size:`${podSize} Specialist Pod`,estimated_rate:`$${currentTierPrice}/mo`,recipient:'comfort.encode.workplace@gmail.com'});
+  const ok=await sendEmailSubmission({form_type:'Custom Pod Application',name,email,pod_size:podSize,estimated_rate:`$${currentTierPrice}/mo`,recipient:'comfort.encode.workplace@gmail.com'});
   btn.disabled=false;ts.textContent='Dispatch pod application';
   if(ok){showToast('Pod application received! Our team will contact you shortly.');document.getElementById('pod-application-form').reset();handleSizeSelectChange()}
   else showToast('Failed to send application. Please try again.',true)
