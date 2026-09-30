@@ -98,8 +98,11 @@ header nav.wrap{max-width:none;display:flex;align-items:center;justify-content:s
 #about .wrap{display:grid;gap:0 72px;align-content:start}
 @media(min-width:960px){#about .wrap{grid-template-columns:5fr 6fr}#about .wrap>*{grid-column:1}#about .wrap>.grid{grid-column:2;grid-row:1/span 3;margin-top:0}}
 #about .wrap>.eyebrow{justify-self:start}
-#about .grid{gap:16px}
-#about .card{display:grid;grid-template-columns:48px 1fr;column-gap:22px}
+#about .grid{grid-template-columns:1fr;gap:16px}
+#about .card{display:grid;grid-template-columns:48px 1fr;column-gap:22px;transition:transform .35s cubic-bezier(.16,1,.3,1),padding .35s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s,background .3s}
+#about .card:hover{transform:translateX(-10px) scale(1.03);padding:36px 34px;border-color:rgba(216,138,83,.6);background:linear-gradient(160deg,rgba(216,138,83,.14),rgba(255,255,255,.03));box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 0 1px rgba(216,138,83,.2)}
+#about .card .ico{transition:transform .35s cubic-bezier(.16,1,.3,1),background .3s}
+#about .card:hover .ico{transform:scale(1.12) rotate(-4deg);background:rgba(216,138,83,.2)}
 #about .card .ico{grid-row:1/span 3}
 #about .card h3{font-size:22px}
 @media(max-width:959px){#about .grid{margin-top:48px}}
