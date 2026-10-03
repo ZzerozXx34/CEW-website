@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://YOUR-DOMAIN.com/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://cew-website-o4sb.vercel.app/</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://cew-website-o4sb.vercel.app/terms.html</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://cew-website-o4sb.vercel.app/privacy.html</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://cew-website-o4sb.vercel.app/refund-cancellation.html</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://cew-website-o4sb.vercel.app/business-information.html</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://cew-website-o4sb.vercel.app/cookie-notice.html</loc><lastmod>2026-10-03</lastmod></url>
+  <url><loc>https://cew-website-o4sb.vercel.app/client-agreement-overview.html</loc><lastmod>2026-10-03</lastmod></url>
 </urlset>
